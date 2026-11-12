@@ -1,0 +1,25 @@
+# Gradle & Android Studio
+android/.gradle/
+android/.idea/
+android/local.properties
+android/**/build/
+android/*.iml
+android/.cxx/
+*.apk
+*.aab
+*.jks
+*.keystore
+
+# Firebase & Node
+firebase/functions/node_modules/
+firebase/functions/lib/
+firebase/.firebase/
+firebase-debug.log
+firebase-debug.*.log
+*.local
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db

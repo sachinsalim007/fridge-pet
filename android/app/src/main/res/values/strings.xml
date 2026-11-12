@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Fridge Pet</string>
+    <string name="safety_disclaimer">AI expiry dates are estimates — always smell, inspect, and check before eating.</string>
+</resources>
