@@ -12,6 +12,7 @@ import com.fridgepet.app.data.remote.PetDialogueRequest
 import com.fridgepet.app.data.remote.RescueRecipesResponse
 import com.fridgepet.app.domain.MoodSnapshot
 import com.fridgepet.app.domain.PetMoodEngine
+import com.fridgepet.app.domain.PetSpecies
 import com.fridgepet.app.domain.PetState
 import com.fridgepet.app.domain.ShelfType
 import kotlinx.coroutines.flow.Flow
@@ -44,14 +45,21 @@ class FridgeRepository(
 
     fun observeAllEvents(): Flow<List<WasteEventEntity>> = dao.observeAllEvents()
 
-    suspend fun completeOnboarding(petName: String, seedDemoGroceries: Boolean) {
-        val cleanName = petName.trim().ifBlank { "Brrbie" }
+    suspend fun completeOnboarding(
+        species: PetSpecies,
+        customName: String,
+        notificationHour: Int,
+        seedDemoGroceries: Boolean,
+    ) {
+        val cleanName = customName.trim().ifBlank { species.displayName }
         val existing = dao.getPetProfileOnce() ?: PetProfileEntity()
         dao.upsertPetProfile(
             existing.copy(
                 id = 1,
+                speciesId = species.id,
                 name = cleanName,
                 onboarded = true,
+                notificationHour = notificationHour.coerceIn(0, 23),
                 lastDialogue = "Hi! I'm $cleanName. Scan a receipt anytime and I'll watch over your shelves!",
                 lastDialogueUpdatedMs = System.currentTimeMillis(),
             )
@@ -72,8 +80,8 @@ class FridgeRepository(
                     ),
                     FoodItemEntity(
                         name = "baby spinach",
-                        rawLabel = "ORG SPINACH 250G",
-                        quantityLabel = "250 g",
+                        rawLabel = "ORG SPINACH 200G",
+                        quantityLabel = "200 g",
                         shelf = ShelfType.FRIDGE,
                         expiryEpochDay = today + 2,
                         priceAed = 12.00,
@@ -81,7 +89,7 @@ class FridgeRepository(
                     ),
                     FoodItemEntity(
                         name = "fresh milk",
-                        rawLabel = "حليب طازج 1L",
+                        rawLabel = "ALMARAI FF 1L",
                         quantityLabel = "1 L",
                         shelf = ShelfType.FRIDGE,
                         expiryEpochDay = today + 4,
@@ -90,7 +98,7 @@ class FridgeRepository(
                     ),
                     FoodItemEntity(
                         name = "arabic flatbread",
-                        rawLabel = "خبز عربي",
+                        rawLabel = "خبز عربي 6PCS",
                         quantityLabel = "6 pcs",
                         shelf = ShelfType.PANTRY,
                         expiryEpochDay = today + 3,
@@ -154,12 +162,12 @@ class FridgeRepository(
 
     suspend fun moveToFreezer(item: FoodItemEntity) {
         val today = LocalDate.now().toEpochDay()
-        val extendedExpiry = maxOf(item.expiryEpochDay, today) + 30L
+        val extendedExpiry = maxOf(item.expiryEpochDay, today) + 90L // Extends by 3 months (+90 days) per PRD
         dao.updateItem(
             item.copy(
                 shelf = ShelfType.FREEZER,
                 expiryEpochDay = extendedExpiry,
-                storageTip = "Frozen in time! Keeps well for ~1–3 months; label with today's date.",
+                storageTip = "Frozen in time (+3 months)! Thaw in fridge before cooking.",
             )
         )
         triggerBriefCelebration()
@@ -268,6 +276,15 @@ class FridgeRepository(
             )
         )
         refreshPetDialogue()
+    }
+
+    suspend fun pamperPetCheer() {
+        val profile = dao.getPetProfileOnce() ?: return
+        dao.upsertPetProfile(
+            profile.copy(
+                celebratingUntilEpochMs = System.currentTimeMillis() + 30_000L,
+            )
+        )
     }
 
     private suspend fun triggerBriefCelebration() {

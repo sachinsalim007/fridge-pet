@@ -67,8 +67,8 @@ fun FridgeNavHost(
 
     if (!state.petProfile.onboarded) {
         OnboardingScreen(
-            onFinishOnboarding = { petName, seedDemoGroceries ->
-                viewModel.completeOnboarding(petName, seedDemoGroceries)
+            onFinishOnboarding = { species, customName, notificationHour, seedDemoGroceries ->
+                viewModel.completeOnboarding(species, customName, notificationHour, seedDemoGroceries)
             },
         )
         return
@@ -134,6 +134,7 @@ fun FridgeNavHost(
                     onMarkUsed = viewModel::markItemUsed,
                     onMoveToFreezer = viewModel::moveToFreezer,
                     onRefreshDialogue = viewModel::refreshPetDialogue,
+                    onPamperPet = viewModel::pamperPet,
                 )
             }
             composable(Routes.SCAN) {

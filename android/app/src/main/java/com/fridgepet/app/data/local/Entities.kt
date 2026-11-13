@@ -28,8 +28,10 @@ data class FoodItemEntity(
 @Entity(tableName = "pet_profile")
 data class PetProfileEntity(
     @PrimaryKey val id: Int = 1,
-    val name: String = "Brrbie",
+    val speciesId: String = "MOCHI",
+    val name: String = "Mochi",
     val onboarded: Boolean = false,
+    val notificationHour: Int = 9,
     val consecutiveGoodWeeks: Int = 0,
     val celebratingUntilEpochMs: Long = 0L,
     val lastDialogue: String = "Scan a receipt so we can keep every dirham fresh!",

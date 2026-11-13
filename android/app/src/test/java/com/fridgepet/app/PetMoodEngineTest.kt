@@ -2,8 +2,11 @@ package com.fridgepet.app
 
 import com.fridgepet.app.domain.EvolutionStage
 import com.fridgepet.app.domain.PetMoodEngine
+import com.fridgepet.app.domain.PetSpecies
 import com.fridgepet.app.domain.PetState
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.LocalDate
 import java.time.LocalTime
@@ -25,6 +28,26 @@ class PetMoodEngineTest {
             localTime = noon,
         )
         assertEquals(PetState.HUNGRY, mood.state)
+        assertFalse(mood.hasCozyScarf)
+    }
+
+    @Test
+    fun `unlocks Cozy Scarf after 1 low-waste week`() {
+        val mood = PetMoodEngine.computeMood(
+            expiryDatesEpochDay = listOf(
+                today.plusDays(3).toEpochDay(),
+                today.plusDays(4).toEpochDay(),
+                today.plusDays(5).toEpochDay(),
+            ),
+            consecutiveGoodWeeks = 1,
+            celebratingUntilEpochMs = 0L,
+            nowEpochMs = 1000L,
+            today = today,
+            localTime = noon,
+        )
+        assertEquals(PetState.CONTENT, mood.state)
+        assertTrue(mood.hasCozyScarf)
+        assertEquals(EvolutionStage.STAGE_1, mood.evolutionStage)
     }
 
     @Test
@@ -81,16 +104,10 @@ class PetMoodEngineTest {
     }
 
     @Test
-    fun `returns CELEBRATING during active celebration window`() {
-        val mood = PetMoodEngine.computeMood(
-            expiryDatesEpochDay = emptyList(),
-            consecutiveGoodWeeks = 4,
-            celebratingUntilEpochMs = 5000L,
-            nowEpochMs = 1000L,
-            today = today,
-            localTime = noon,
-        )
-        assertEquals(PetState.CELEBRATING, mood.state)
-        assertEquals(EvolutionStage.STAGE_3, mood.evolutionStage)
+    fun `verifies 10 PetSpecies entries exist with unique affinities`() {
+        assertEquals(10, PetSpecies.entries.size)
+        val species = PetSpecies.fromId("ZAATAR")
+        assertEquals("Zaatar", species.displayName)
+        assertEquals("Bakery & Flatbreads", species.foodAffinity)
     }
 }

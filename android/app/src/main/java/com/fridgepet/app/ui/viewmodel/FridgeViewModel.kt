@@ -12,6 +12,7 @@ import com.fridgepet.app.data.repository.FridgeRepository
 import com.fridgepet.app.domain.EvolutionStage
 import com.fridgepet.app.domain.MoodSnapshot
 import com.fridgepet.app.domain.PetMoodEngine
+import com.fridgepet.app.domain.PetSpecies
 import com.fridgepet.app.domain.PetState
 import com.fridgepet.app.domain.ShelfType
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,12 +27,14 @@ import java.util.UUID
 data class FridgeUiState(
     val isLoaded: Boolean = false,
     val petProfile: PetProfileEntity = PetProfileEntity(),
+    val species: PetSpecies = PetSpecies.MOCHI,
     val mood: MoodSnapshot = MoodSnapshot(
         state = PetState.HUNGRY,
         evolutionStage = EvolutionStage.STAGE_1,
         expiredCount = 0,
         expiringSoonCount = 0,
         activeItemCount = 0,
+        hasCozyScarf = false,
     ),
     val activeItems: List<FoodItemEntity> = emptyList(),
     val needsAttentionItems: List<FoodItemEntity> = emptyList(),
@@ -43,7 +46,7 @@ data class FridgeUiState(
     val wastedCountThisWeek: Int = 0,
     val isScanning: Boolean = false,
     val scanMerchant: String = "",
-    val scanSafetyNote: String = "AI expiry dates are estimates — always smell, inspect, and check before eating.",
+    val scanSafetyNote: String = "AI expiry dates are estimates (est.) — always smell, inspect, and check before eating.",
     val scanIsDemoFallback: Boolean = false,
     val editableScannedItems: List<EditableScannedItem> = emptyList(),
     val isLoadingRecipes: Boolean = false,
@@ -55,7 +58,7 @@ data class FridgeUiState(
 private data class TransientState(
     val isScanning: Boolean = false,
     val scanMerchant: String = "",
-    val scanSafetyNote: String = "AI expiry dates are estimates — always smell, inspect, and check before eating.",
+    val scanSafetyNote: String = "AI expiry dates are estimates (est.) — always smell, inspect, and check before eating.",
     val scanIsDemoFallback: Boolean = false,
     val editableScannedItems: List<EditableScannedItem> = emptyList(),
     val isLoadingRecipes: Boolean = false,
@@ -78,6 +81,7 @@ class FridgeViewModel(
         transient,
     ) { profileOrNull, activeItems, weeklyEvents, allEvents, transientState ->
         val profile = profileOrNull ?: PetProfileEntity()
+        val species = PetSpecies.fromId(profile.speciesId)
         val mood = repository.computeCurrentMood(profile, activeItems)
         val attention = activeItems.filter {
             PetMoodEngine.daysUntilExpiry(it.expiryEpochDay) <= 2
@@ -88,6 +92,7 @@ class FridgeViewModel(
         FridgeUiState(
             isLoaded = true,
             petProfile = profile,
+            species = species,
             mood = mood,
             activeItems = activeItems,
             needsAttentionItems = attention,
@@ -113,9 +118,20 @@ class FridgeViewModel(
         initialValue = FridgeUiState(),
     )
 
-    fun completeOnboarding(petName: String, seedDemoGroceries: Boolean) {
+    fun completeOnboarding(
+        species: PetSpecies,
+        customName: String,
+        notificationHour: Int,
+        seedDemoGroceries: Boolean,
+    ) {
         viewModelScope.launch {
-            repository.completeOnboarding(petName, seedDemoGroceries)
+            repository.completeOnboarding(species, customName, notificationHour, seedDemoGroceries)
+        }
+    }
+
+    fun pamperPet() {
+        viewModelScope.launch {
+            repository.pamperPetCheer()
         }
     }
 

@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AcUnit
 import androidx.compose.material.icons.rounded.CameraAlt
 import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.RestaurantMenu
 import androidx.compose.material3.Button
@@ -47,6 +48,7 @@ fun HomeScreen(
     onMarkUsed: (FoodItemEntity) -> Unit,
     onMoveToFreezer: (FoodItemEntity) -> Unit,
     onRefreshDialogue: () -> Unit,
+    onPamperPet: () -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -65,7 +67,7 @@ fun HomeScreen(
                         style = MaterialTheme.typography.headlineLarge,
                     )
                     Text(
-                        text = "Stage ${state.mood.evolutionStage.stageNumber} · ${state.mood.evolutionStage.title}",
+                        text = "${state.species.title} · Stage ${state.mood.evolutionStage.stageNumber} ${state.mood.evolutionStage.title}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
@@ -96,10 +98,22 @@ fun HomeScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
+                    // Interactive Pamperable Pet Creature
                     FridgePetAvatar(
                         petState = state.mood.state,
                         evolutionStage = state.mood.evolutionStage,
-                        size = 196.dp,
+                        species = state.species,
+                        hasCozyScarf = state.mood.hasCozyScarf,
+                        size = 200.dp,
+                        interactive = true,
+                        onPetTapped = onPamperPet,
+                        onPetPampered = onPamperPet,
+                    )
+
+                    Text(
+                        text = "Tip: Tap or rub ${state.petProfile.name}'s tummy to pamper!",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
 
                     Surface(
@@ -300,7 +314,7 @@ private fun NeedsAttentionCard(
                             modifier = Modifier.size(16.dp),
                         )
                         Spacer(modifier = Modifier.size(6.dp))
-                        Text("Freeze (+30d)")
+                        Text("Freeze (+90d)")
                     }
                 }
             }
