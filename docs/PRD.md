@@ -49,11 +49,32 @@ Fridge Pet is a playful, beginner-friendly food waste companion app for Android.
 
 ## 3. Detailed Feature Specifications
 
-### 3.1. Onboarding & Pet Profile
-- **Egg Hatch Animation**: Playful wobble to hatched creature.
-- **Pet Name**: Free text input (max 20 chars), default presets ("Mochi", "Brrbie", "Zaatar", "Chilli").
+### 3.1. Onboarding, Pet Selection & Custom Naming
+- **10-Pet Selection Carousel**:
+  - Users swipe horizontally through 10 interactive creature eggs / preview avatars before hatching:
+    1. **Mochi**: Soft mint jelly blob (Fresh greens & dairy)
+    2. **Zaatar**: Fluffy golden-toasted sesame puff (Bakery & grains)
+    3. **Chilli**: Teardrop crimson pepper with tiny stem (Spices & sauces)
+    4. **Frosty**: Translucent ice cube sprite with blue glow (Freezer goods)
+    5. **Laban**: Creamy porcelain droplet with a soft swirl (Milk & yogurts)
+    6. **Berry**: Round lavender-magenta berry puff (Fruits & berries)
+    7. **Olive**: Sleek emerald oval with glossy highlight (Oils & Mediterranean)
+    8. **Ginger**: Knobby playful root creature with sprout (Root vegetables)
+    9. **Spud**: Cozy rounded potato with cute freckles (Dry pantry staples)
+    10. **Citrus**: Sun-gold wedge buddy with mint leaf tail (Citrus & herbs)
+- **Custom Name & Rename**:
+  - Free text input (1 to 24 characters) allowing any custom name (e.g., "Mochi", "Habibi", "Mr. Pickles", "Chef Zuzu").
+  - Quick-preset chips based on chosen species for one-tap naming.
+  - Can be renamed at any time from the Pet Profile / Home screen.
+- **Egg Hatching Sequence**:
+  - Tapping the selected egg triggers wobbling, haptic feedback, shell crack particles, and emergence of the chosen pet.
 - **Notification Preferences**: Custom reminder time picker (default 09:00 AM local time).
-- **Demo Mode Option**: Toggle to pre-populate 4 sample UAE items (`chicken breast`, `baby spinach`, `milk`, `flatbread`) for immediate testing.
+- **Demo Mode Option**: Toggle to pre-populate 4 sample UAE items for immediate testing.
+
+### 3.1.1. Interactive Pamper & Touch Engine
+- **Touch / Tap**: Pet bounces, squishes elastically, and triggers a happy chirp and blink.
+- **Continuous Petting / Rubbing (Pamper Gesture)**: Rubbing across the creature's tummy activates the **Purr / Pamper Loop** (floating heart particles, closed contented eyes, and a temporary +30 second mood cheer).
+- **Drag & Pull**: Stretches with spring physics and snaps back smoothly.
 
 ### 3.2. Receipt & Fridge Scanner
 - **Camera Viewfinder**: CameraX with aspect-ratio guide brackets.
@@ -152,7 +173,8 @@ Progress is driven strictly by **consecutive low-waste weeks** (weeks where 0 it
    - `resolvedAtEpochMs`: Long?
 2. **`pet_profile`**:
    - `id`: Int (PK = 1)
-   - `name`: String
+   - `speciesId`: String (`MOCHI`, `ZAATAR`, `CHILLI`, `FROSTY`, `LABAN`, `BERRY`, `OLIVE`, `GINGER`, `SPUD`, `CITRUS`)
+   - `name`: String (custom user-chosen name, editable at any time)
    - `onboarded`: Boolean
    - `notificationHour`: Int (0–23, default 9)
    - `consecutiveGoodWeeks`: Int
