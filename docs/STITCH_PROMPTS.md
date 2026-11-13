@@ -8,6 +8,22 @@
 
 ---
 
+## 🎨 Generated Screen Registry (Project `8343919699699103156`)
+
+All 7 core MVP screens have been generated in Google Stitch under the `Fresh Sprout` design system:
+
+| # | Screen Name | Stitch Screen Resource / ID | Status | Key Features |
+|---|---|---|---|---|
+| **1** | **Onboarding & Hatching** | `screens/15e989cb6b2744dfb86f3371e697423c` | ✅ Generated | 10-pet carousel, custom naming, wobbling egg hero, notification chips |
+| **2** | **Home & Pamper Stage** | `screens/f9e71c2172504396a3cf5559e3a705ae` | ✅ Generated | 3D Mochi companion, tummy rub pampering, urgent shelf (chicken, spinach) |
+| **3** | **Scan Groceries Viewfinder** | `screens/eeeb82e3739a49979e0b1ad5fc753f9b` | ✅ Generated | Camera HUD, UAE receipt framing guides, torch/gallery buttons |
+| **4** | **Review Groceries** | `screens/c9885bc90ba74e1c95f8b69ba4d18e3c` | ✅ Generated | Arabic/English item edit, AED prices, storage toggle (Fridge/Freezer +90d) |
+| **5** | **My Fridge & Pantry** | `screens/6f4d7dd13ba84905805a07a3564c1dee` | ✅ Generated | Crisper, Freezer, Dry Pantry categories, days left countdown pills |
+| **6** | **Rescue Kitchen** | `screens/024d44ba5ddf42d698af849d516ab8f7` | ✅ Generated | Chef Mochi toque banner, 15-min skillet recipe, "Cooked This!" CTA |
+| **7** | **Weekly Impact Report** | `screens/d10e5a44b9c24ab98fe887cd30b0fa9d` | ✅ Generated | AED 59 saved, 83% zero-waste radial ring, Cozy Coral Scarf equipped |
+
+---
+
 ## Screen 1: Onboarding & 10-Pet Selection Carousel
 **Screen Title:** `Onboarding - Meet & Hatch Your Pet`  
 **Device Type:** `MOBILE`
